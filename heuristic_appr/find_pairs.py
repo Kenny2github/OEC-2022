@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import math
 
 
@@ -279,4 +280,4 @@ moves.append(target_recycle)#update move
 
 
 
-np.savetxt("Yoshi_" + test_map + "_output.csv", moves, delimiter=",", fmt='%s')
+np.savetxt("Yoshi_" + os.path.basename(test_map) + "_output.csv", moves, delimiter=",", fmt='%s')

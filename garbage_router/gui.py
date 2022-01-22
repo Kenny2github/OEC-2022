@@ -1,11 +1,11 @@
 import os
 import sys
 import pygame
-from garbage_router.ant_pathfinding import run_rounds
-from garbage_router.cmdargs import args
-
-from garbage_router.enums import NodeType
-from garbage_router.qor import validator
+from subprocess import DEVNULL, PIPE, Popen
+from .ant_pathfinding import run_rounds
+from .cmdargs import args
+from .enums import NodeType
+from .qor import validator
 from .data_io import read_data
 
 pygame.init()
@@ -65,11 +65,11 @@ def pathfind(screen, nodes, a: float, b: float):
             NodeType.RECYCLING: (255, 0, 255)
         }[node.type], (*center(node.lat, node.long), 10, 10))
     #path, qor = run_rounds(nodes, a, b)
-    with open('tmp.txt', 'w') as f:
-        f.write(args().input[:-4] + f'\n{a}\n{b}\n')
-    os.system(sys.executable + f'heuristic_appr/find_pairs.py < tmp.txt')
+    process = Popen([sys.executable, f'heuristic_appr/find_pairs.py'], stdin=PIPE, stdout=DEVNULL)
+    process.communicate((args().input[:-4] + f'\n{a}\n{b}\n').encode())
     path = read_data("Yoshi_" + os.path.basename(args().input) + "_output.csv")
-    qor = validator(nodes, path, a, b)
+    qor = validator([node.to_csv_row() for node in nodes],
+                    [node.to_csv_row() for node in path], a, b)
 
     for i in range(len(path) - 1):
         node, to_node = path[i], path[i+1]
