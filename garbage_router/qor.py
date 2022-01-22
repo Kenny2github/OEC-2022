@@ -91,9 +91,10 @@ def validator(map_nodes, path_nodes):
                 for node in processed_nodes:
                     #print("node info: ",node)
 
-                    total_loss += node[3] * cur_loss * distance
+                    if node[3] > 0:
+                        total_loss += node[3] * cur_loss * distance
                     # update the weights at each node
-                    node[3] -= node[3] * cur_loss * distance
+                    node[3] = min(0, (node[3] - node[3] * cur_loss * distance))
                     node_label = node[1]
                     #print("node label: ",node_label," & current type: ",cur_type)
 
@@ -138,12 +139,6 @@ def convert_str_node(node_str):
         node.append(int(node_list[4]))
         node.append(float(node_list[5]))
     return node
-
-
-if __name__ == '__main__':
-    while len(sys.argv) < 3:
-        sys.argv.append(input())
-    validator(sys.argv[1], sys.argv[2], 1, 1)
 
 # #initialize pickup load states, to track which loads have been processed
 # load_states_list = ["pickup", "local sort", "regional sort", "done"]
