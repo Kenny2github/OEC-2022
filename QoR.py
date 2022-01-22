@@ -138,6 +138,11 @@ def convert_str_node(node_str):
         node.append(float(node_list[5]))
     return node
 
+if __name__ == '__main__':
+    while len(sys.argv) < 3:
+        sys.argv.append(input())
+    validator(sys.argv[1], sys.argv[2], 1, 1)
+
 # #initialize pickup load states, to track which loads have been processed
 # load_states_list = ["pickup", "local sort", "regional sort", "done"]
 # pickup_load_states = [] #pickup, local sort, regional sort, done
