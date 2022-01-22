@@ -73,8 +73,7 @@ def pathfind(screen, nodes, a: float, b: float):
     pygame.draw.rect(screen, (255, 255, 255), rect2)
     screen.blit(text2, rect2.topleft)
 
-def main(a: float, b: float):
-    nodes = read_data()['nodes']
+def main(nodes, a: float, b: float):
     screen = pygame.display.set_mode(SIZE)
     pathfind(screen, nodes, a, b)
     group = pygame.sprite.GroupSingle(Slider())
