@@ -94,7 +94,7 @@ def validator(map_nodes, path_nodes):
                     if node[3] > 0:
                         total_loss += node[3] * cur_loss * distance
                     # update the weights at each node
-                    node[3] = min(0, (node[3] - node[3] * cur_loss * distance))
+                    node[3] = max(0, (node[3] - node[3] * cur_loss * distance))
                     node_label = node[1]
                     #print("node label: ",node_label," & current type: ",cur_type)
 

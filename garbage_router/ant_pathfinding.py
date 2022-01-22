@@ -6,7 +6,7 @@ from .waste import Waste
 from .node import Node
 from .truck import Truck
 
-NUM_ANTS = 200
+NUM_ANTS = 1000
 ROUNDS = 80
 
 def run_ant(nodes: list[Node],
@@ -14,16 +14,19 @@ def run_ant(nodes: list[Node],
     ant = Truck()
     nodes = nodes[:]
     # must visit all waste notes
-    unvisited = {node for node in nodes if node.type == 'waste'}
+    unvisited = {node for node in nodes if node.type == NodeType.WASTE}
     prev_node = nodes[0]
     path: list[Node] = []
-    while not ant.done():
+    while 1:
         path.append(prev_node)
         if prev_node.type == NodeType.WASTE:
             unvisited.discard(prev_node)
             ant.contents.append(Waste(prev_node.plastic_amt))
             nodes.remove(prev_node) # don't visit the same waste node twice
         ant.update(prev_node)
+        if ant.done():
+            break
+        #print('\n', ant.contents, 'getting weights-------------------------------')
         weights = [ant.desirability(prev_node, node)
                    * pheromones[prev_node, node]
                    for node in nodes
@@ -38,9 +41,9 @@ def run_ant(nodes: list[Node],
                               if node != prev_node], weights)
     return path
 
-def run_ants(nodes: list[Node], pheromones: dict[tuple[Node, Node], float]
-             ) -> tuple[list[Node], list[float]]:
-    paths = [run_ant(nodes, pheromones) for _ in range(NUM_ANTS)]
+def run_ants(nodes: list[Node], pheromones: dict[tuple[Node, Node], float],
+             round_number: int) -> tuple[list[Node], list[float]]:
+    paths = [run_ant(nodes, pheromones) for _ in range(NUM_ANTS // round_number)]
     map_nodes = [node.to_csv_row() for node in nodes]
     qors = [validator(
         map_nodes, [node.to_csv_row() for node in path]
@@ -50,8 +53,7 @@ def run_ants(nodes: list[Node], pheromones: dict[tuple[Node, Node], float]
 def qor_to_scaling(qor: float, worst: float) -> float:
     # bigger qor is worse
     # better qor => greater scaling
-    qor = worst - qor
-    return 1 + qor / worst
+    return 2 - qor / worst
 
 def run_rounds(nodes: list[Node]) -> list[Node]:
     pheromones: dict[tuple[Node, Node], float] = {}
@@ -59,9 +61,9 @@ def run_rounds(nodes: list[Node]) -> list[Node]:
         for node2 in nodes:
             pheromones[node1, node2] = 1.0
     prev_qbest = 0.0
-    for i in range(ROUNDS):
-        print('Round', i + 1)
-        paths, qors = run_ants(nodes, pheromones)
+    for i in range(1, ROUNDS + 1):
+        print('Round', i)
+        paths, qors = run_ants(nodes, pheromones, i)
         qworst = max(qors)
         qbest = min(qors)
         if qbest == prev_qbest:
@@ -73,4 +75,4 @@ def run_rounds(nodes: list[Node]) -> list[Node]:
                 continue # something went wrong
             for j in range(len(path) - 1):
                 pheromones[path[j], path[j+1]] *= qor_to_scaling(qor, qworst)
-    return paths[max(range(len(qors)), key=lambda i: qors[i])]
+    return paths[min(range(len(qors)), key=lambda i: qors[i])]
