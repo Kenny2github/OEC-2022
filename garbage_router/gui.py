@@ -66,7 +66,7 @@ def pathfind(screen, nodes, a: float, b: float):
         }[node.type], (*center(node.lat, node.long), 10, 10))
     #path, qor = run_rounds(nodes, a, b)
     process = Popen([sys.executable, f'heuristic_appr/find_pairs.py'], stdin=PIPE, stdout=DEVNULL)
-    process.communicate((args().input[:-4] + f'\n{a}\n{b}\n').encode())
+    process.communicate((args().input + f'\n{a}\n{b}\n').encode())
     path = read_data("Yoshi_" + os.path.basename(args().input) + "_output.csv")
     qor = validator([node.to_csv_row() for node in nodes],
                     [node.to_csv_row() for node in path], a, b)

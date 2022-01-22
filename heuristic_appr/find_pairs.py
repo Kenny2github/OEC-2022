@@ -100,8 +100,7 @@ class Truck():
         self.regionalsorted = 0
         self.recycled = 0
 
-test_map = input()
-test_map = test_map+ ".csv"
+test_map = input('Enter filename: ')
 print("Enter a value:")
 a = input()
 print("Enter b value:")
