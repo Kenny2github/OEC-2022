@@ -7,7 +7,7 @@ from .node import Node
 from .truck import Truck
 
 NUM_ANTS = 1000
-ROUNDS = 80
+ROUNDS = 10
 
 def run_ant(nodes: list[Node],
             pheromones: dict[tuple[Node, Node], float]) -> list[Node]:
@@ -42,11 +42,12 @@ def run_ant(nodes: list[Node],
     return path
 
 def run_ants(nodes: list[Node], pheromones: dict[tuple[Node, Node], float],
-             round_number: int) -> tuple[list[Node], list[float]]:
-    paths = [run_ant(nodes, pheromones) for _ in range(NUM_ANTS // round_number)]
+             round_number: int, a: float, b: float) -> tuple[list[Node], list[float]]:
+    paths = [run_ant(nodes, pheromones) for _ in range(max(1, NUM_ANTS // round_number))]
     map_nodes = [node.to_csv_row() for node in nodes]
     qors = [validator(
-        map_nodes, [node.to_csv_row() for node in path]
+        map_nodes, [node.to_csv_row() for node in path],
+        a, b
     ) for path in paths]
     return paths, qors
 
@@ -55,17 +56,21 @@ def qor_to_scaling(qor: float, worst: float) -> float:
     # better qor => greater scaling
     return 2 - qor / worst
 
-def run_rounds(nodes: list[Node]) -> list[Node]:
+def run_rounds(nodes: list[Node], a: float, b: float) -> tuple[list[Node], float]:
     pheromones: dict[tuple[Node, Node], float] = {}
     for node1 in nodes:
         for node2 in nodes:
             pheromones[node1, node2] = 1.0
     prev_qbest = 0.0
+    old_best = None
     for i in range(1, ROUNDS + 1):
         print('Round', i)
-        paths, qors = run_ants(nodes, pheromones, i)
+        paths, qors = run_ants(nodes, pheromones, i * len(nodes), a, b)
+        if not paths:
+            break
         qworst = max(qors)
         qbest = min(qors)
+        old_best = paths[qors.index(qbest)]
         if qbest == prev_qbest:
             print('Converged to QoR of', qbest)
             break
@@ -75,4 +80,4 @@ def run_rounds(nodes: list[Node]) -> list[Node]:
                 continue # something went wrong
             for j in range(len(path) - 1):
                 pheromones[path[j], path[j+1]] *= qor_to_scaling(qor, qworst)
-    return paths[min(range(len(qors)), key=lambda i: qors[i])]
+    return old_best, qbest
