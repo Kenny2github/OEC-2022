@@ -1,15 +1,9 @@
-from garbage_router.ant_pathfinding import run_ant
-from garbage_router.node import Node
+from QoR import validator
+from garbage_router.ant_pathfinding import run_rounds
+from garbage_router.cmdargs import args
 from garbage_router.data_io import read_data, write_data
 
 nodes = read_data()['nodes']
-print(nodes)
-pheromones: dict[tuple[Node, Node], float] = {}
-for node1 in nodes:
-    for node2 in nodes:
-        pheromones[node1, node2] = 1.0
-
-print('--------------------------------')
-path = run_ant(nodes, pheromones)
-print(path)
+path = run_rounds(nodes)
 write_data(path)
+validator(args().input[:-4], args().output[:-4], args().a, args().b)

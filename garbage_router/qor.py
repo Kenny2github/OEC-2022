@@ -71,8 +71,8 @@ def validator(map_nodes, path_nodes):
         #print("current path node info: ",path_nodes[i])
 
         cur_type = map_nodes[cur_id][3]
-        cur_weight = float(map_nodes[cur_id][-1].strip("\n"))
-        cur_loss = float(map_nodes[cur_id][4])
+        cur_weight = float(map_nodes[cur_id][4].strip("\n"))
+        cur_loss = float(map_nodes[cur_id][-1])
         cur_loc = (map_nodes[cur_id][1], map_nodes[cur_id][2])
 
         if cur_id in waste_nodes:
@@ -120,7 +120,7 @@ def validator(map_nodes, path_nodes):
             return -1
     if is_valid:
         QoR = (a * total_loss + b * total_distance)  # *run time
-        print("QoR:", QoR)
+        #print("QoR:", QoR)
         return QoR
 # helper
 

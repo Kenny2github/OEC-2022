@@ -2,9 +2,8 @@ from __future__ import annotations
 from functools import cache
 from csv import reader, writer
 from typing import TypedDict
-from garbage_router.enums import NodeType
-
-from garbage_router.waste import Waste
+from .enums import NodeType
+from .waste import Waste
 from .cmdargs import args
 from .node import Node
 
@@ -29,5 +28,4 @@ def write_data(path: list[Node]):
     with open(args().output, 'w', newline='') as outfile:
         csv_writer = writer(outfile)
         for node in path:
-            csv_writer.writerow((node.id, node.lat, node.long,
-                                 node.type.value, node.plastic_amt, node.risk))
+            csv_writer.writerow(node.to_csv_row())

@@ -1,7 +1,5 @@
 from dataclasses import dataclass, field
-
-from garbage_router.enums import PROCESSABLE, RESULTS, NodeType
-
+from .enums import PROCESSABLE, RESULTS, NodeType
 from .waste import Waste
 from .node import Node
 from .data_io import read_data
