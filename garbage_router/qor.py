@@ -1,5 +1,6 @@
 import math
 import sys
+from .cmdargs import args
 
 # helper function to read from a csv file and return the info in a list
 # can be used when: read from map & read from path (if the path file is also csv)
@@ -35,13 +36,9 @@ def get_delta_distance(latLon1, latLon2):
 
 # return: QoR (number)
 # if -1: not valid
-def validator(map_file, solution_file, a, b):
-
-    #read from map file: add nodes to list. Maybe declare custom data type to store all the info
-    #id, location, fac_type, load, loss%
-    map_nodes = read_from_csv(map_file)
-    #read from path file: store node id# to list
-    path_nodes = read_from_csv(solution_file)
+def validator(map_nodes, path_nodes):
+    cmdargs = args()
+    a, b = cmdargs.a, cmdargs.b
     # type-label dict
     type_label = {
         "waste": "pickup",
@@ -118,13 +115,16 @@ def validator(map_file, solution_file, a, b):
             print("Not all waste nodes have been processed")
             return -1
         if node[1] != "done":
-            print("The path is not valid: not all nodes are processed: ",node[1])
+            print(
+                "The path is not valid: not all nodes are processed: ", node[1])
             return -1
     if is_valid:
-        QoR = (a * total_loss + b * total_distance) #*run time
-        print("QoR:", QoR)
+        QoR = (a * total_loss + b * total_distance)  # *run time
+        #print("QoR:", QoR)
         return QoR
 # helper
+
+
 def convert_str_node(node_str):
     node_list = node_str.split(",")
     node = []
@@ -138,6 +138,7 @@ def convert_str_node(node_str):
         node.append(int(node_list[4]))
         node.append(float(node_list[5]))
     return node
+
 
 if __name__ == '__main__':
     while len(sys.argv) < 3:
