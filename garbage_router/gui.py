@@ -46,7 +46,7 @@ def arrow(screen, from_pos: tuple[float, float], to_pos: tuple[float, float]):
                      to_pos, 3)
 
 def center(x, y):
-    return WIDTH // 2 + x, HEIGHT // 2 + y
+    return pygame.Vector2(WIDTH // 2, HEIGHT // 2) + pygame.Vector2(x, y) * 1.5
 
 def pathfind(screen, nodes, a: float, b: float):
 
