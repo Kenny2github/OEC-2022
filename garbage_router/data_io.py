@@ -1,13 +1,16 @@
 from __future__ import annotations
 from functools import cache
 from csv import reader, writer
-from typing import TYPE_CHECKING, TypedDict
+from typing import TypedDict
+from garbage_router.enums import NodeType
+
+from garbage_router.waste import Waste
 from .cmdargs import args
 from .node import Node
 
 class ReadData(TypedDict):
     nodes: list[Node]
-    total_waste: int
+    waste: list[Waste]
 
 @cache
 def read_data() -> ReadData:
@@ -15,10 +18,11 @@ def read_data() -> ReadData:
     with open(args().input) as infile:
         for row in reader(infile):
             nodes.append(Node.from_csv_row(row))
+    waste: list[Waste] = [Waste(node.plastic_amt) for node in nodes
+                          if node.type == NodeType.WASTE]
     return ReadData(
         nodes=nodes,
-        total_waste=sum(node.plastic_amt for node in nodes
-                        if node.type == 'waste')
+        waste=waste,
     )
 
 def write_data(path: list[Node]):
@@ -26,4 +30,4 @@ def write_data(path: list[Node]):
         csv_writer = writer(outfile)
         for node in path:
             csv_writer.writerow((node.id, node.lat, node.long,
-                                 node.type, node.plastic_amt, node.risk))
+                                 node.type.value, node.plastic_amt, node.risk))

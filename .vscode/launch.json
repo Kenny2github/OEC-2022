@@ -21,7 +21,11 @@
 			"type": "python",
 			"request": "launch",
 			"program": "QoR.py",
-			"console": "integratedTerminal"
+			"console": "integratedTerminal",
+			"args": [
+				"test cases\\small\\test_10_equal",
+				"lol",
+			]
 		}
 	]
 }

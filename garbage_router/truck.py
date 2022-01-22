@@ -1,31 +1,33 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+from garbage_router.enums import PROCESSABLE, RESULTS, NodeType
+
+from .waste import Waste
 from .node import Node
 from .data_io import read_data
 
 @dataclass
 class Truck:
-    unprocessed: int = 0
-    locally_sorted: int = 0
-    regionally_sorted: int = 0
-    recycled: int = 0
+    contents: list[Waste] = field(default_factory=list)
 
     def processable(self, at: Node) -> int:
-        """Return the value of one of the attributes of the truck,
-        based on what type of node ``at`` is.
-        """
-        return getattr(self, {
-            'local_sorting_facility': 'unprocessed',
-            'regional_sorting_facility': 'locally_sorted',
-            'regional_recycling_facility': 'regionally_sorted'
-        }[at.type])
+        if at.type == NodeType.WASTE:
+            return at.plastic_amt
+        return sum(waste.amount for waste in self.contents
+                   if PROCESSABLE[at.type] == waste.status)
 
     def done(self) -> bool:
         """If not all waste is """
-        return self.recycled >= read_data()['total_waste']
+        return len(self.contents) == len(read_data()['waste']) \
+            and all(waste.done for waste in self.contents)
 
     def desirability(self, cur_node: Node, next_node: Node) -> float:
         dist = cur_node.dist(next_node)
-        if next_node.type == 'waste':
-            return 1 / dist
         loss = dist * next_node.risk
-        return self.processable(next_node) / (dist * loss)
+
+        return self.processable(next_node) - dist - loss
+
+    def update(self, node: Node) -> None:
+        for waste in self.contents:
+            if PROCESSABLE[node.type] == waste.status:
+                waste.status = RESULTS[node.type]

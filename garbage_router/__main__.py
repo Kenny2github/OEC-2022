@@ -9,4 +9,7 @@ for node1 in nodes:
     for node2 in nodes:
         pheromones[node1, node2] = 1.0
 
-write_data(run_ant(nodes, pheromones))
+print('--------------------------------')
+path = run_ant(nodes, pheromones)
+print(path)
+write_data(path)

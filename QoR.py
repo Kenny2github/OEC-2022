@@ -3,6 +3,8 @@ import sys
 
 # helper function to read from a csv file and return the info in a list
 # can be used when: read from map & read from path (if the path file is also csv)
+
+
 def read_from_csv(file_name):
     res = []
     with open(file_name + ".csv") as csv_file:
@@ -48,7 +50,6 @@ def validator(map_file, solution_file, a, b):
         "regional_recycling_facility": "done"
     }
 
-
     is_valid = True
     #check if first node is valid
     if (map_nodes[0][0] != path_nodes[0][0]):
@@ -73,9 +74,9 @@ def validator(map_file, solution_file, a, b):
         #print("current path node info: ",path_nodes[i])
 
         cur_type = map_nodes[cur_id][3]
-        cur_weight = float(map_nodes[cur_id][-1].strip("\n"))
-        cur_loss = float(map_nodes[cur_id][4])
-        cur_loc = (map_nodes[cur_id][1],map_nodes[cur_id][2])
+        cur_weight = float(map_nodes[cur_id][4].strip("\n"))
+        cur_loss = float(map_nodes[cur_id][-1])
+        cur_loc = (map_nodes[cur_id][1], map_nodes[cur_id][2])
 
         if cur_id in waste_nodes:
             waste_nodes.remove(cur_id)
