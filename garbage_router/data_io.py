@@ -12,17 +12,12 @@ class ReadData(TypedDict):
     waste: list[Waste]
 
 @cache
-def read_data() -> ReadData:
+def read_data(path: str) -> list[Node]:
     nodes: list[Node] = []
-    with open(args().input) as infile:
+    with open(path) as infile:
         for row in reader(infile):
             nodes.append(Node.from_csv_row(row))
-    waste: list[Waste] = [Waste(node.plastic_amt) for node in nodes
-                          if node.type == NodeType.WASTE]
-    return ReadData(
-        nodes=nodes,
-        waste=waste,
-    )
+    return nodes
 
 def write_data(path: list[Node]):
     with open(args().output, 'w', newline='') as outfile:

@@ -3,7 +3,7 @@ from garbage_router.ant_pathfinding import run_rounds
 from garbage_router.cmdargs import args
 from garbage_router.data_io import read_data, write_data
 
-nodes = read_data()['nodes']
+nodes = read_data(args().input)
 if args().draw:
     from garbage_router.gui import main
     main(nodes, args().a, args().b)

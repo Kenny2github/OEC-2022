@@ -10,7 +10,7 @@
 			"request": "launch",
 			"module": "garbage_router",
 			"args": [
-				"test cases\\small\\test_10_equal.csv",
+				"test cases\\large\\test_80000_equal.csv",
 				"lol.csv",
 				"0.9",
 				"0.1",
