@@ -1,5 +1,4 @@
 import numpy as np
-import os
 import math
 
 
@@ -106,7 +105,7 @@ print("Enter a value:")
 a = input()
 print("Enter b value:")
 b = input()
-data = np.loadtxt("c:\\users\\roryg\\desktop\\oec2022\\oec-2022\\test cases\\large\\" + test_map, dtype="<U27", delimiter=',')
+data = np.loadtxt(test_map, dtype="<U27", delimiter=',')
 
 GarbageTruck = Truck()
 
@@ -167,7 +166,7 @@ moves = []
 
 
 if len(waste_pts) > 50000:
-    compromise_val = 50
+    compromise_val = 45
 elif len(waste_pts) > 15000:
     compromise_val = 25
 elif len(waste_pts) > 5000:
