@@ -1,8 +1,11 @@
 from dataclasses import dataclass, field
+from .cmdargs import args
 from .enums import PROCESSABLE, RESULTS, NodeType
 from .waste import Waste
 from .node import Node
 from .data_io import read_data
+
+POWER = 5
 
 @dataclass
 class Truck:
@@ -21,9 +24,10 @@ class Truck:
 
     def desirability(self, cur_node: Node, next_node: Node) -> float:
         dist = cur_node.dist(next_node)
-        loss = dist * next_node.risk
+        weight = self.processable(next_node)
+        loss = dist * next_node.risk * weight
 
-        return self.processable(next_node) - dist - loss
+        return weight / (dist + loss + 1)
 
     def update(self, node: Node) -> None:
         for waste in self.contents:
