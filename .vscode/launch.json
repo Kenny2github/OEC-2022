@@ -5,6 +5,18 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Run Router",
+			"type": "python",
+			"request": "launch",
+			"module": "garbage_router",
+			"args": [
+				"test cases\\small\\test_10_equal.csv",
+				"lol.csv",
+				"1",
+				"2"
+			]
+		},
+		{
 			"name": "Run Validator",
 			"type": "python",
 			"request": "launch",
