@@ -5,6 +5,19 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Run GUI",
+			"type": "python",
+			"request": "launch",
+			"module": "garbage_router",
+			"args": [
+				"test cases\\small\\test_10_equal.csv",
+				"lol.csv",
+				"0.9",
+				"0.1",
+				"--draw"
+			]
+		},
+		{
 			"name": "Run Router",
 			"type": "python",
 			"request": "launch",

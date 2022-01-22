@@ -1,6 +1,4 @@
 import math
-import sys
-from .cmdargs import args
 
 # helper function to read from a csv file and return the info in a list
 # can be used when: read from map & read from path (if the path file is also csv)
@@ -36,9 +34,7 @@ def get_delta_distance(latLon1, latLon2):
 
 # return: QoR (number)
 # if -1: not valid
-def validator(map_nodes, path_nodes):
-    cmdargs = args()
-    a, b = cmdargs.a, cmdargs.b
+def validator(map_nodes, path_nodes, a, b):
     # type-label dict
     type_label = {
         "waste": "pickup",
