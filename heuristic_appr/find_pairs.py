@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import math
 
 
@@ -99,8 +100,7 @@ class Truck():
         self.regionalsorted = 0
         self.recycled = 0
 
-test_map = input()
-test_map = test_map+ ".csv"
+test_map = input('Enter filename: ')
 print("Enter a value:")
 a = input()
 print("Enter b value:")
@@ -279,4 +279,4 @@ moves.append(target_recycle)#update move
 
 
 
-np.savetxt("Yoshi_" + test_map + "_output.csv", moves, delimiter=",", fmt='%s')
+np.savetxt("Yoshi_" + os.path.basename(test_map) + "_output.csv", moves, delimiter=",", fmt='%s')

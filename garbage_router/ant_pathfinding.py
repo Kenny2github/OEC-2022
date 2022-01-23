@@ -15,6 +15,7 @@ def run_ant(nodes: list[Node],
     nodes = nodes[:]
     # must visit all waste notes
     unvisited = {node for node in nodes if node.type == NodeType.WASTE}
+    waste_count = len(unvisited)
     prev_node = nodes[0]
     path: list[Node] = []
     while 1:
@@ -24,7 +25,7 @@ def run_ant(nodes: list[Node],
             ant.contents.append(Waste(prev_node.plastic_amt))
             nodes.remove(prev_node) # don't visit the same waste node twice
         ant.update(prev_node)
-        if ant.done():
+        if ant.done(waste_count):
             break
         #print('\n', ant.contents, 'getting weights-------------------------------')
         weights = [ant.desirability(prev_node, node)
